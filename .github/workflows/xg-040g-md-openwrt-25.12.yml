@@ -12,6 +12,11 @@ on:
         required: false
         default: false
         type: boolean
+      repo_commit:
+        description: "Pinned xiangtailiang/openwrt commit (empty = branch tip)"
+        required: false
+        default: ""
+        type: string
   push:
     branches:
       - main
@@ -37,6 +42,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      REPO_COMMIT: ${{ inputs.repo_commit || '0b821bb42f693b556e3e14e9f50f1f497fef98e4' }}
 
     steps:
       - name: Checkout
@@ -84,7 +91,15 @@ jobs:
 
       - name: Clone OpenWrt source code (openwrt-25.12)
         run: |
-          git clone --depth 1 --branch "$REPO_BRANCH" "$REPO_URL" openwrt
+          if [ -n "$REPO_COMMIT" ]; then
+            git init openwrt
+            git -C openwrt remote add origin "$REPO_URL"
+            git -C openwrt fetch --depth 1 origin "$REPO_COMMIT"
+            git -C openwrt checkout FETCH_HEAD
+          else
+            git clone --depth 1 --branch "$REPO_BRANCH" "$REPO_URL" openwrt
+          fi
+          git -C openwrt log -1 --format='SOURCE PINNED: %H %cI'
 
       - name: Move build dirs to /mnt/openwrt
         run: |
