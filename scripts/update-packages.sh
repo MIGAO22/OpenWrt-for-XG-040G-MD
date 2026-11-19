@@ -183,10 +183,12 @@ PATCH_SING_BOX_GO127 || exit 1
 
 # 注入 RNDIS 接收聚合内核补丁：修复 ZTE 19d2:0581 随身WiFi 在 2048 字节
 # 接收上限下发送畸形帧导致下载只有 ~1KB/s 的问题（上游 f688218baa71 机制）
+# 注意：必须放 pending-6.12（generic/patches-* 目录会被构建系统守卫拒绝）
 RNDIS_PATCH="$GITHUB_WORKSPACE/patch/782-usb-net-rndis-zte-0581-rx-aggregation.patch"
 if [ -f "$RNDIS_PATCH" ]; then
-	install -D -m 644 "$RNDIS_PATCH" ../target/linux/generic/patches-6.12/782-usb-net-rndis-zte-0581-rx-aggregation.patch
-	echo "Installed RNDIS RX aggregation patch into target/linux/generic/patches-6.12"
+	install -D -m 644 "$RNDIS_PATCH" ../target/linux/generic/pending-6.12/782-usb-net-rndis-zte-0581-rx-aggregation.patch
+	rm -rf ../target/linux/generic/patches-6.12
+	echo "Installed RNDIS RX aggregation patch into target/linux/generic/pending-6.12"
 else
 	echo "ERROR: RNDIS patch not found: $RNDIS_PATCH"
 	exit 1
