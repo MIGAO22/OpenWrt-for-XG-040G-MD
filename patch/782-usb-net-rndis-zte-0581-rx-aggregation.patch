@@ -20,7 +20,7 @@ and apply it to this stick, keeping the ZTE destination-MAC fixup.
 +
 +	/* some devices require a receive limit above 2048 for RX aggregation */
 +	if (dev->driver_info->data & RNDIS_DRIVER_DATA_RX_AGGREGATION)
-+		dev->rx_urb_size = max_t(size_t, dev->rx_urb_size, 16 * 1024);
++		dev->rx_urb_size = max_t(size_t, dev->rx_urb_size, 64 * 1024);
 +
  	u.init->max_transfer_size = cpu_to_le32(dev->rx_urb_size);
  
