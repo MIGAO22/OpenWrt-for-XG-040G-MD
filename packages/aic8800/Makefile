@@ -77,6 +77,10 @@ define KernelPackage/aic8800-usb
   AUTOLOAD:=$(call AutoProbe,aic_load_fw aic8800DC_fdrv)
 endef
 
+define KernelPackage/aic8800-usb/install
+	printf 'aic_load_fw\naic8800DC_fdrv\n' > $(1)/etc/modules.d/aic8800-usb
+endef
+
 NOSTDINC_FLAGS:= \
 	$(KERNEL_NOSTDINC_FLAGS) \
 	-I$(PKG_BUILD_DIR) \
@@ -118,6 +122,7 @@ ifneq ($(CONFIG_PACKAGE_kmod-aic8800-usb),)
 	+$(KERNEL_MAKE) $(PKG_JOBS) \
 		M="$(PKG_BUILD_DIR)/src/USB/driver_fw/drivers/aic8800" \
 		NOSTDINC_FLAGS="$(NOSTDINC_FLAGS)" \
+		KCFLAGS="-Wno-error" \
 		CONFIG_AIC_FW_PATH="/lib/firmware/aic8800/usb" \
 		modules
 endif
