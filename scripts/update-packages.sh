@@ -181,6 +181,16 @@ fi
 
 PATCH_SING_BOX_GO127 || exit 1
 
+AIC8800_PACKAGE="$GITHUB_WORKSPACE/packages/aic8800"
+if [ -d "$AIC8800_PACKAGE" ]; then
+	rm -rf ../package/kernel/aic8800
+	cp -a "$AIC8800_PACKAGE" ../package/kernel/aic8800
+	echo "Installed AIC8800 USB driver package into package/kernel/aic8800"
+else
+	echo "ERROR: AIC8800 package not found: $AIC8800_PACKAGE"
+	exit 1
+fi
+
 # 注入 RNDIS 接收聚合内核补丁：修复 ZTE 19d2:0581 随身WiFi 在 2048 字节
 # 接收上限下发送畸形帧导致下载只有 ~1KB/s 的问题（上游 f688218baa71 机制）
 # 注意：必须放 pending-6.12（generic/patches-* 目录会被构建系统守卫拒绝）

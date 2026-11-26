@@ -23,6 +23,7 @@ on:
     paths:
       - ".github/workflows/xg-040g-md-openwrt-25.12.yml"
       - "config/xg-040g-md.config"
+      - "packages/**"
       - "scripts/**"
       - "feeds.conf.default"
 
@@ -239,6 +240,7 @@ jobs:
           内核版本: 6.12.X
           源码仓库: $REPO_URL
           分支: $REPO_BRANCH
+          无线: RT3573 (wifik) + AIC8800D80 (a69c:5721 自动切换至 a69c:8d80)
           EOF
 
       - name: Publish GitHub Release

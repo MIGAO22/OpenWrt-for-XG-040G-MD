@@ -1,0 +1,11 @@
+#!/bin/sh
+
+for dev in /sys/bus/usb/devices/*; do
+	[ -f "$dev/idVendor" ] || continue
+	read -r vendor < "$dev/idVendor"
+	read -r product < "$dev/idProduct"
+	if [ "$vendor" = "a69c" ] && [ "$product" = "5721" ]; then
+		/sbin/usbmode -s -c /etc/usb-mode-aic8800.json
+		break
+	fi
+done
